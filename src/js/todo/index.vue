@@ -9,6 +9,7 @@
         <form class="register">
           <div class="register__input">
             <p class="register__input__title">やることのタイトル</p>
+
             <input
               v-model="targetTodo.title"
               type="text"
@@ -17,6 +18,7 @@
               required
             >
           </div>
+
           <div class="register__input">
             <p class="register__input__title">やることの内容</p>
             <textarea
@@ -27,6 +29,7 @@
               required
             />
           </div>
+
           <div class="register__submit">
             <button
               class="register__submit__btn"
@@ -49,8 +52,11 @@
         </div>
 
         <div class="todos">
+
+          <!--todos配列内の要素を表示-->
           <template v-if="todos.length">
           <ul class="todos__list">
+            <!--変数 todo に 配列todosを1個ずつ格納-->
             <li v-for="todo in todos"
             :key="todo.id"
             :class="todo.completed ? 'is-completed' : ''"
@@ -70,10 +76,13 @@
                   </template>
                   </button>
                 </div>
+
                 <div class="todos__desc">
-                  <h2 class="todos__desc__title">{{ todo.title }}</h2>
-                  <p class="todos__desc__detail">{{ todo.detail }}</p>
+                  <!--変数todoに格納されてる配列todosの要素を表示-->
+                  <h2 class="todos__desc__title">{{ todo.title }}</h2><!--todo.titleを表示-->
+                  <p class="todos__desc__detail">{{ todo.detail }}</p><!--todo.detailを表示-->
                 </div>
+
                 <div class="todos__btn">
                   <button
                   class="todos__btn__edit"
@@ -86,6 +95,7 @@
                   @click="deleteTodo(todo.id)"
                   >削除</button>
                 </div>
+
               </div>
             </li>
           </ul>
@@ -125,12 +135,15 @@ export default {
   created() {
     axios.get('http://localhost:3000/api/todos/')
     // axios:通信成功時
-    .then(({ data }) => {
-      this.todos = data.todos.reverse();
-      console.log(data);
+    .then(({ data }) => { // オブジェクト内のtodos自体を直接取得
+      this.todos = data.todos.reverse(); // this.todos
+      console.log({data});
+      console.log(data); // todos内の各オブジェクト
+      console.log(this.todos);
     })
     // axios:エラー発生時
     .catch((err) => {
+      console.log(err);
       // axios:通信成功時 :エラー発生時
       if (err.response) {
         this.errorMessage = err.response.data.message;
@@ -157,9 +170,12 @@ export default {
     },
     // axios:エラー発生時の処理
     showError(err) {
+      console.log(err.response);
       if (err.response) {
         this.errorMessage = err.response.data.message;
-      } else {
+      }
+      // error.responseを参照出来なかった場合
+      else {
         this.errorMessage = 'ネットに接続がされていない、もしくはサーバーとの接続がされていません。ご確認ください。';
       }
     },
@@ -183,22 +199,22 @@ export default {
     },
     // 完了、未完了ボタンをクリック時
     changeCompleted(todo) {
-      // input , textareaを空白にする処理
+      // 編集中 : 完了、未完了ボタンをクリック時にinput , textareaを空白にする処理
       this.targetTodo = this.initTargetTodo();
 
-      console.log(todo); // todo => // 完了、未完了ボタンをクリック時のイベント情報(オブジェクト型)
+      console.log(todo); // todo => 完了、未完了ボタンをクリックしたtodoのイベント情報(オブジェクト型)
       const targetTodo = Object.assign({}, todo); // todoを変数targetTodoに代入
       axios.patch(`http://localhost:3000/api/todos/${targetTodo.id}`, {
         completed: !targetTodo.completed,
       })
       // axios:通信成功時
       .then(({ data }) => {
-        console.log(data); // 対象のtargetTodoのcompletedを反転させたデータ(オブジェクト / !targetTodo.completed)
+        console.log({data}); // 対象のtargetTodoのcompletedを反転させたデータ(オブジェクト / !targetTodo.completed)
         this.todos = this.todos.map((todoItem) => {
           console.log(this.todos); // this.todos => todoItemを格納してる配列
           console.log(todoItem); // todoItem ・・・ 完了、未完了ボタンをクリック時のイベントの情報(this.todosに格納されてる) <=> changeCompletedメソッドの引数と同じ
           console.log(targetTodo); // 配列todos内の選択したtargetTodo
-          if (todoItem.id === targetTodo.id) return data; // 再レンダリングを行い !targetTodo.completedを表示
+          if (todoItem.id === targetTodo.id) return data; // 再レンダリングを行い 状態管理のdataに条件式に合った要素をreturnして!targetTodo.completedを表示
           return todoItem;
         });
         this.hideError();
@@ -220,12 +236,7 @@ export default {
           targetTodo.title === this.targetTodo.title // 変更前のtitle === 編集中のtitle
           && targetTodo.detail === this.targetTodo.detail // 変更前のdetail === 編集中のdetail
         ) {
-          this.targetTodo = Object.assign({}, {
-            id: null,
-            title: '',
-            detail: '',
-            completed: false,
-          });
+          this.targetTodo = this.initTargetTodo();
           return;
         }
       // 変更ボタンクリック時 : 入力値を変更してる場合

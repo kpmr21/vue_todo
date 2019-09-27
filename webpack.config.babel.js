@@ -8,7 +8,7 @@ console.log('nodeEnv ==> ', nodeEnv);
 console.log('isDev ==> ', isDev);
 console.log(path.resolve(__dirname, 'src/js/components'));
 
-const src = path.resolve(__dirname, './src');
+const src = path.resolve(__dirname, './src');// 合体シてる
 const dist = path.resolve(__dirname, './public');
 
 const config = {
@@ -17,7 +17,7 @@ const config = {
   resolve: {
     extensions: ['.vue', '.js', '.json'],
     alias: {
-      TodoDir: `${src}/js/todo`,
+      TodoDir: `${src}/js/todo`, // key名でvalueで呼び出す pathが置き換わる
       TodoRouterDir: `${src}/js/todoRouter`,
       TodoVuexDir: `${src}/js/todoVuex`,
       VuexSample: `${src}/js/todoVuex_sample`,

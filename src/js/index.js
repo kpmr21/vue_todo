@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue from 'vue'; // npm vue のパッケーじをインストール
 // import VueRouter from 'vue-router';
 
 // import routes from 'TodoRouterDir/routes';
@@ -22,7 +22,7 @@ import myApp from 'TodoDir'; // TodoDir: `${src}/js/todo` / const src = path.res
 // });
 
 new Vue({
-  el: '#app', //index.html id = app
+  el: '#app', //index.html id = app レンダリング先 バンドルでまとめてhtmlに反映させてる
   // router,
   // store,
   render: h => h(myApp), // templateタグ内のレンダリングを実行 参考 => https://qiita.com/teinen_qiita/items/ed1bb1909a17f9ca9daa
