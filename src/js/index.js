@@ -9,8 +9,8 @@ import Vue from 'vue';
 
 import '../scss/global.scss';
 
-import myApp from './first';
-// import myApp from 'TodoDir';
+// import myApp from './first';
+import myApp from 'TodoDir'; // TodoDir: `${src}/js/todo` / const src = path.resolve(__dirname, './src');
 // import myApp from 'TodoRouterDir';
 // import myApp from 'TodoVuexDir';
 // import myApp from 'VuexSample';
@@ -22,10 +22,10 @@ import myApp from './first';
 // });
 
 new Vue({
-  el: '#app',
+  el: '#app', //index.html id = app
   // router,
   // store,
-  render: h => h(myApp),
+  render: h => h(myApp), // templateタグ内のレンダリングを実行 参考 => https://qiita.com/teinen_qiita/items/ed1bb1909a17f9ca9daa
   // render: h => h(myApp), は↓の書き方を短くしたもの
   // render: function (createElement) {
   //   return createElement(myApp)
