@@ -90,24 +90,30 @@ export default {
   created() {
     axios.get('http://localhost:3000/api/todos/').then(({ data }) => {
       this.todos = data.todos.reverse();
-      this.setFilter();
+      this.setFilter(); // setFilterメソッドを実行 / setFilterメソッドは methods内に定義してる
     }).catch((err) => {
       this.showError(err);
       this.setFilter();
     });
   },
   methods: {
+    // 「全て表示」「未完了のみ表示」「完了済みのみ表示」 : 切り替え時
     setFilter() {
-      const routeName = this.$route.name;
-      this.todoFilter = routeName;
+      const routeName = this.$route.name; // 変数 routeName = 選択したroute.nameを代入
+      // console.log(routeName); // route.name ・・・ src/js/todoRorter/routes.js内の 変数 routesに格納してる配列内のオブジェクト内のkey(name)のvalueを取得
+      this.todoFilter = routeName; // this.todoFilter(文字列 : リアクティブプロパティ)にrouterNameを代入
       if (routeName === 'completedTodos') {
+        // this.filteredTodos(リアクティブプロパティ : 配列)
+        // filterメソッドで this.todos(リアクティブプロパティ : 配列)内のtodo.completed = true の要素を取り出し新たな配列に格納
+        // this.filteredTodos(リアクティブプロパティ : 配列)に filterメソッドで作成した配列を代入
         this.filteredTodos = this.todos.filter(todo => todo.completed);
       } else if (routeName === 'incompleteTodos') {
         this.filteredTodos = this.todos.filter(todo => !todo.completed);
       } else {
         this.filteredTodos = this.todos;
       }
-
+      // !this.filteredTodos.length => this.filteredTodos(リアクティブプロパティ : 配列)の要素数が 0
+      // setEmptyMessageメソッドを実行
       if (!this.filteredTodos.length) this.setEmptyMessage();
     },
     setEmptyMessage() {
@@ -148,14 +154,14 @@ export default {
       });
       axios.post('http://localhost:3000/api/todos/', postTodo).then(({ data }) => {
         this.todos.unshift(data);
-        this.targetTodo = this.initTargetTodo();
+        this.targetTodo = this.initTargetTodo(); // this.targetTodo(リアクティブプロパティ)にinitTargetTodoメソッドを実行
         this.hideError();
       }).catch((err) => {
         this.showError(err);
       });
     },
     changeCompleted(todo) {
-      this.targetTodo = this.initTargetTodo();
+      this.targetTodo = this.initTargetTodo(); // input , textarea を空白にする
       const targetTodo = Object.assign({}, todo);
       axios.patch(`http://localhost:3000/api/todos/${targetTodo.id}`, {
         completed: !targetTodo.completed,
@@ -179,7 +185,7 @@ export default {
         && targetTodo.detail === this.targetTodo.detail
       ) {
         this.targetTodo = this.initTargetTodo();
-        return;
+        return; // editTodoメソッドの処理を終了させる
       }
       axios.patch(`http://localhost:3000/api/todos/${this.targetTodo.id}`, {
         title: this.targetTodo.title,

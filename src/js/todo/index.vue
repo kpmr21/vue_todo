@@ -135,15 +135,11 @@ export default {
   created() {
     axios.get('http://localhost:3000/api/todos/')
     // axios:通信成功時
-    .then(({ data }) => { // オブジェクト内のtodos自体を直接取得
-      this.todos = data.todos.reverse(); // this.todos
-      console.log({data});
-      console.log(data); // todos内の各オブジェクト
-      console.log(this.todos);
+    .then(({data}) => { // {data} => data.dataを取得 / 参考 => https://qiita.com/nayucolony/items/0b9b0d6c8d968481c6fb
+      this.todos = data.todos.reverse(); // this.todos(リアクティブプロパティ)に data.todos(data.data.todos)を逆順に代入
     })
     // axios:エラー発生時
     .catch((err) => {
-      console.log(err);
       // axios:通信成功時 :エラー発生時
       if (err.response) {
         this.errorMessage = err.response.data.message;
@@ -156,7 +152,7 @@ export default {
   },
   methods: {
     // input , textareaを空白にする処理
-    initTargetTodo() {
+    initTargetTodo() { // オブジェクトを返す関数
       return Object.assign({}, {
         id: null,
         title: '',
@@ -214,8 +210,8 @@ export default {
           console.log(this.todos); // this.todos => todoItemを格納してる配列
           console.log(todoItem); // todoItem ・・・ 完了、未完了ボタンをクリック時のイベントの情報(this.todosに格納されてる) <=> changeCompletedメソッドの引数と同じ
           console.log(targetTodo); // 配列todos内の選択したtargetTodo
-          if (todoItem.id === targetTodo.id) return data; // 再レンダリングを行い 状態管理のdataに条件式に合った要素をreturnして!targetTodo.completedを表示
-          return todoItem;
+          if (todoItem.id === targetTodo.id) return data; // 条件に合った要素(todoItem)に対し(completedを反転した)dataを返す
+          return todoItem; // 条件外の要素(todoItem)に対してtodoItemを返す
         });
         this.hideError();
       })
@@ -231,13 +227,14 @@ export default {
     // 変更ボタンクリック時
     editTodo() {
       // 変更ボタンクリック時 : 入力値を変更してない場合
-      const targetTodo = this.todos.find(todo => todo.id === this.targetTodo.id); // todo.id => 変更前の配列が格納されてる変数のid / targetTodo.id => 編集ボタンをクリックし選択したtodos配列内のtargetTodoのid
+      // todo.id => 変更前の配列が格納されてる変数のid / this.targetTodo.id => 編集ボタンをクリックし選択したtodos配列内のtargetTodoのid
+      const targetTodo = this.todos.find(todo => todo.id === this.targetTodo.id); // 配列.find( 条件式 ) => 条件式に合う要素を取り出し新たな配列を作成
         if (
           targetTodo.title === this.targetTodo.title // 変更前のtitle === 編集中のtitle
           && targetTodo.detail === this.targetTodo.detail // 変更前のdetail === 編集中のdetail
         ) {
           this.targetTodo = this.initTargetTodo();
-          return;
+          return; // 処理を止める
         }
       // 変更ボタンクリック時 : 入力値を変更してる場合
       axios.patch(`http://localhost:3000/api/todos/${this.targetTodo.id}`, {
@@ -247,17 +244,12 @@ export default {
       // axios:通信成功時
       .then(({ data }) => {
         this.todos = this.todos.map((todo) => {
-          console.log(todo);
-          console.log(this.targetTodo.id);
-          if (todo.id === this.targetTodo.id) return data;
-          return todo;
+          // console.log(todo);
+          // console.log(this.targetTodo);
+          if (todo.id === this.targetTodo.id) return data; // todo.id === this.targetTodo.idに合致した要素(todo)に対して(変更後の)data.dataを返す
+          return todo; // 条件外の要素(todo)に対してtodoを返す
         });
-        this.targetTodo = Object.assign({}, {
-          id: null,
-          title: '',
-          detail: '',
-          completed: false,
-        });
+        this.targetTodo = this.targetTodo = this.initTargetTodo();
       })
       // axios:エラー発生時
       .catch((err) => {
@@ -273,7 +265,7 @@ export default {
       axios.delete(`http://localhost:3000/api/todos/${id}`)
       // axios:通信成功時
       .then(({ data }) => {
-        this.todos = data.todos.reverse();
+        this.todos = data.todos.reverse(); // 対象の要素を削除後の配列を this.todosを代入
         this.hideError();
       })
       // axios:エラー発生時

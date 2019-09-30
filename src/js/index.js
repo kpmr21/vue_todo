@@ -1,13 +1,13 @@
-import Vue from 'vue'; // npm vue のパッケーじをインストール
-// import VueRouter from 'vue-router';
+import Vue from 'vue'; // npm内 => vueのpackegeをインストール
+// import VueRouter from 'vue-router'; // SPA(シングルページアプリケーション)をルーティングする為のVue.js公式のパッケージ
 
-// import routes from 'TodoRouterDir/routes';
+// import routes from 'TodoRouterDir/routes'; // routes.jsでルーティングの定義を行う配列を呼び出す
 // import routes from 'TodoVuexDir/routes';
 // import store from 'TodoVuexDir/store';
 // import routes from 'VuexSample/routes';
 // import store from 'VuexSample/store';
 
-import '../scss/global.scss';
+import '../scss/global.scss'; // style-loaderでglobal.scssを反映させてる
 
 // import myApp from './first';
 import myApp from 'TodoDir'; // TodoDir: `${src}/js/todo` / const src = path.resolve(__dirname, './src');
@@ -15,11 +15,12 @@ import myApp from 'TodoDir'; // TodoDir: `${src}/js/todo` / const src = path.res
 // import myApp from 'TodoVuexDir';
 // import myApp from 'VuexSample';
 
-// Vue.use(VueRouter);
-// const router = new VueRouter({
-//   routes,
-//   mode: 'history',
-// });
+// ルーティング用のインスタンス
+// Vue.use(VueRouter); // Vue.use(プラグイン); => Vue.js用のプラグインを使用時の記述
+//   const router = new VueRouter({
+//     routes,
+//     mode: 'history',
+//   });
 
 new Vue({
   el: '#app', //index.html id = app レンダリング先 バンドルでまとめてhtmlに反映させてる
