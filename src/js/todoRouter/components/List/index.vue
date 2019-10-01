@@ -20,10 +20,10 @@ export default {
   components: {
     appListItem: ListItem,
   },
-  props: {
+  props: { // containersコンポーネントから渡されたtodosをpropsとして受け取る
     todos: {
       type: Array,
-      default: () => [],
+      default: () => [], // containersコンポーネントから渡されたtodosをデフォルトで空の配列にする
     },
   },
 };

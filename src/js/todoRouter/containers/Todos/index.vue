@@ -45,7 +45,7 @@ import axios from 'axios';
 
 import Wrapper from 'TodoRouterDir/components/Wrapper';
 import Navi from 'TodoRouterDir/components/Navi';
-import { ErrorMessage, EmptyMessage } from 'TodoRouterDir/components/Message';
+import { ErrorMessage, EmptyMessage } from 'TodoRouterDir/components/Message'; //{ ErrorMessage, EmptyMessage } => Messageディレクトリ内 Error.vue , Empty.vueからそれぞれ exportしてるErrorMessage, EmptyMessageをimport
 import Register from 'TodoRouterDir/components/Register';
 import List from 'TodoRouterDir/components/List';
 
@@ -106,6 +106,7 @@ export default {
         // this.filteredTodos(リアクティブプロパティ : 配列)
         // filterメソッドで this.todos(リアクティブプロパティ : 配列)内のtodo.completed = true の要素を取り出し新たな配列に格納
         // this.filteredTodos(リアクティブプロパティ : 配列)に filterメソッドで作成した配列を代入
+        // マークアップ部分 <app-list v-if="filteredTodos.length"> で表示
         this.filteredTodos = this.todos.filter(todo => todo.completed);
       } else if (routeName === 'incompleteTodos') {
         this.filteredTodos = this.todos.filter(todo => !todo.completed);

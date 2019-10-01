@@ -47,7 +47,7 @@
           </div>
         </form>
         <!--errorMessage表示部分-->
-        <div v-if="errorMessage" class="error">
+        <div v-if="errorMessage" class="error"><!---->
           <p class="error__text">{{ errorMessage }}</p>
         </div>
 
@@ -166,7 +166,6 @@ export default {
     },
     // axios:エラー発生時の処理
     showError(err) {
-      console.log(err.response);
       if (err.response) {
         this.errorMessage = err.response.data.message;
       }
@@ -184,7 +183,7 @@ export default {
       axios.post('http://localhost:3000/api/todos/', postTodo)
       // axios:通信成功時
       .then(({ data }) => {
-        this.todos.unshift(data);
+        this.todos.unshift(data); // this.todos(リアクティブプロパティ)に返ってきたデータ(data)を逆順に格納
         this.targetTodo = this.initTargetTodo();
         this.hideError(); // errorMessageが表示されてる場合 : errorMessageを削除する処理
       })
@@ -197,20 +196,14 @@ export default {
     changeCompleted(todo) {
       // 編集中 : 完了、未完了ボタンをクリック時にinput , textareaを空白にする処理
       this.targetTodo = this.initTargetTodo();
-
-      console.log(todo); // todo => 完了、未完了ボタンをクリックしたtodoのイベント情報(オブジェクト型)
       const targetTodo = Object.assign({}, todo); // todoを変数targetTodoに代入
       axios.patch(`http://localhost:3000/api/todos/${targetTodo.id}`, {
         completed: !targetTodo.completed,
       })
       // axios:通信成功時
       .then(({ data }) => {
-        console.log({data}); // 対象のtargetTodoのcompletedを反転させたデータ(オブジェクト / !targetTodo.completed)
         this.todos = this.todos.map((todoItem) => {
-          console.log(this.todos); // this.todos => todoItemを格納してる配列
-          console.log(todoItem); // todoItem ・・・ 完了、未完了ボタンをクリック時のイベントの情報(this.todosに格納されてる) <=> changeCompletedメソッドの引数と同じ
-          console.log(targetTodo); // 配列todos内の選択したtargetTodo
-          if (todoItem.id === targetTodo.id) return data; // 条件に合った要素(todoItem)に対し(completedを反転した)dataを返す
+          if (todoItem.id === targetTodo.id) return data; // returnしたものを配列に格納 / 条件に合った要素(todoItem)に対し(completedを反転した)dataを返す
           return todoItem; // 条件外の要素(todoItem)に対してtodoItemを返す
         });
         this.hideError();
@@ -244,12 +237,10 @@ export default {
       // axios:通信成功時
       .then(({ data }) => {
         this.todos = this.todos.map((todo) => {
-          // console.log(todo);
-          // console.log(this.targetTodo);
-          if (todo.id === this.targetTodo.id) return data; // todo.id === this.targetTodo.idに合致した要素(todo)に対して(変更後の)data.dataを返す
-          return todo; // 条件外の要素(todo)に対してtodoを返す
+          if (todo.id === this.targetTodo.id) return data; // returnしたものを配列に格納(todo.id === this.targetTodo.idに合致した要素のdata)
+          return todo; // returnしたものを配列に格納(条件外の要素のtodo)
         });
-        this.targetTodo = this.targetTodo = this.initTargetTodo();
+        this.targetTodo = this.initTargetTodo();
       })
       // axios:エラー発生時
       .catch((err) => {

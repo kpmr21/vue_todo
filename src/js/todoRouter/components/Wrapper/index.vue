@@ -19,8 +19,8 @@ import Footer from 'TodoRouterDir/components/Footer';
 
 export default {
   components: {
-    appHeader: Header,
-    appFooter: Footer,
+    appHeader: Header, // Headerをapp-headerに差し込む
+    appFooter: Footer, // Footerをapp-footerに差し込む
   },
   props: {
     todos: {
