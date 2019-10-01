@@ -11,8 +11,7 @@
       @editTodo="editTodo"
     />
     <!--
-      :todo-title="targetTodo.title"
-      @update:todoTitle="targetTodo.title = $event"
+      :todo-title.sync = "targetTodo.title" => v-bind:todo-title="targetTodo.title" v-on:update:todoTitle="targetTodo.title = $event"
 
       :todo-detail="targetTodo.detail"
       @update:todoDetail="targetTodo.detail = $event"

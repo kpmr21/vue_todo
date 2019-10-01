@@ -11,7 +11,7 @@ import '../scss/global.scss'; // style-loaderでglobal.scssを反映させてる
 
 // import myApp from './first';
 // import myApp from 'TodoDir'; // TodoDir: `${src}/js/todo` / const src = path.resolve(__dirname, './src');
-import myApp from 'TodoRouterDir';
+import myApp from 'TodoRouterDir';// todorouter/index.vueをインポート(ファイルの直下のindexとながついてるものをインポート)
 // import myApp from 'TodoVuexDir';
 // import myApp from 'VuexSample';
 
