@@ -31,6 +31,7 @@
         <button
           class="todo__item__btn__delete"
           type="button"
+          @click="deleteTodo(todo.id)"
         >
           削除
         </button>
@@ -42,7 +43,7 @@
 <script>
 export default {
   props: {
-    todo: {
+    todo: { // Listコンポーネントから受け取ったprops
       type: Object,
       default: function() {
         return {};
@@ -55,6 +56,10 @@ export default {
     },
     showEditor: function(todo) {
       this.$store.dispatch('showEditor', todo);
+    },
+    // 追記
+    deleteTodo: function(id) {
+      this.$store.dispatch('deleteTodo', id);
     },
   },
 };

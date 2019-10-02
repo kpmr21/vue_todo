@@ -1,5 +1,5 @@
 <template lang="html">
-  <li :class="['todo__item', todoCompleted ? 'is-completed' : '']">
+  <li :class="{'todo__item' : true , 'is-completed':todoCompleted}">
     <div class="todo__item__inner">
       <div class="todo__item__completed">
         <button

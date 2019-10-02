@@ -2,9 +2,16 @@
   <app-wrapper>
     <app-navi />
     <app-register v-if="todoFilter !== 'completedTodos'" />
-    <app-error-message/>
+    <app-error-message
+      v-if="errorMessage"
+      :error-message="errorMessage"
+    />
     <template v-slot:todos>
       <app-list v-if="todos.length" :todos="todos" />
+      <app-empty-message
+      v-else
+      :empty-message="emptyMessage"
+      />
     </template>
   </app-wrapper>
 </template>
@@ -37,6 +44,10 @@ export default {
     },
     errorMessage: function() {
       return this.$store.state.errorMessage;
+    },
+     // 追記
+    emptyMessage: function() {
+      return this.$store.state.emptyMessage;
     },
   },
   watch: {

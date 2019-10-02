@@ -98,7 +98,7 @@ export default {
   methods: {
     // 「全て表示」「未完了のみ表示」「完了済みのみ表示」 : 切り替え時
     setFilter() {
-      const routeName = this.$route.name; // 変数 routeName = 選択したroute.nameを代入
+      const routeName = this.$route.name; // 変数 routeName = 選択したroute.nameを代入(今表示してるname)
       // console.log(routeName); // route.name ・・・ src/js/todoRorter/routes.js内の 変数 routesに格納してる配列内のオブジェクト内のkey(name)のvalueを取得
       this.todoFilter = routeName; // this.todoFilter(文字列 : リアクティブプロパティ)にrouterNameを代入
       if (routeName === 'completedTodos') {
