@@ -5,7 +5,6 @@ import axios from 'axios';
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
-  strict: process.env.NODE_ENV !== 'production',
   state: {
     todos: [],
     todoFilter: '',
@@ -15,14 +14,12 @@ const store = new Vuex.Store({
       detail: '',
       completed: '',
     },
-    // errorMessage: 'エラーが起きました。', // デフォルトの記述
-    errorMessage: '', // 追記
-    // emptyMessage: 'やることリストは空です。', // デフォルトの記述
-    emptyMessage: '', // 追記
+    errorMessage: '',
+    emptyMessage: '',
   },
   getters: {
-    completedTodos: (state) => state.todos.filter((todo) => todo.completed),
-    incompleteTodos: (state) => state.todos.filter((todo) => !todo.completed),
+    completedTodos: state => state.todos.filter(todo => todo.completed),
+    incompleteTodos: state => state.todos.filter(todo => !todo.completed),
     completedTodosLength: (state, getters) => getters.completedTodos.length,
     incompleteTodosLength: (state, getters) => getters.incompleteTodos.length,
   },
@@ -32,14 +29,11 @@ const store = new Vuex.Store({
     },
     setEmptyMessage(state, routeName) {
       if (routeName === 'completedTodos') {
-        // let emptyMessage = '完了済みのやることリストはありません。'; // デフォルトの記述
-        state.emptyMessage = '完了済みのやることリストはありません。'; // 追記
+        state.emptyMessage = '完了済みのやることリストはありません。';
       } else if (routeName === 'incompleteTodos') {
-        // let emptyMessage = '未完了のやることリストはありません。'; // デフォルトの記述
-        state.emptyMessage = '未完了のやることリストはありません。'; // 追記
+        state.emptyMessage = '未完了のやることリストはありません。';
       } else {
-        // let emptyMessage = 'やることリストには何も登録されていません。'; // デフォルトの記述
-        state.emptyMessage = 'やることリストには何も登録されていません。'; // 追記
+        state.emptyMessage = 'やることリストには何も登録されていません。';
       }
     },
     initTargetTodo(state) {
@@ -51,13 +45,11 @@ const store = new Vuex.Store({
       };
     },
     hideError(state) {
-      // state.errorMessage = 'エラーが起きました。';
-      state.errorMessage = ''; // 追記
+      state.errorMessage = '';
     },
     showError(state, payload) {
       if (payload) {
-        // const errorMessage = payload.data;
-        state.errorMessage = payload.data; // 追記
+        state.errorMessage = payload.data;
       } else {
         state.errorMessage = 'ネットに接続がされていない、もしくはサーバーとの接続がされていません。ご確認ください。';
       }
@@ -80,7 +72,6 @@ const store = new Vuex.Store({
         return todoItem;
       });
     },
-    // 追記
     deleteTodo(state, payload) {
       state.todos = payload.todos.reverse();
     },
@@ -103,61 +94,43 @@ const store = new Vuex.Store({
       });
     },
 
-    // 登録ボタンクリック時の処理
     addTodo({ commit, state }) {
-      // 登録ボタンクリック時 : 入力値が空白の場合
       if (!state.targetTodo.title || !state.targetTodo.detail) {
         commit({
           type: 'showError',
           data: 'タイトルと内容はどちらも必須項目です。',
         });
         return;
-      };
-      // 登録ボタンクリック時 : 入力した場合の処理
+      }
       const postTodo = Object.assign({}, {
         title: state.targetTodo.title,
         detail: state.targetTodo.detail,
       });
-      axios.post('http://localhost:3000/api/todos/', postTodo)
-      // axios通信成功時
-      .then(({ data }) => {
-        commit('addTodo', data); // おそらく第二引数のdataをmutation内addTodoのpayloadに渡してる
-      })
-      // エラー発生時
-      .catch((err) => {
+      commit('hideError');
+      axios.post('http://localhost:3000/api/todos/', postTodo).then(({ data }) => {
+        commit('addTodo', data);
+      }).catch((err) => {
         commit('showError', err.response);
       });
-      commit('hideError'); // 追記 addTodoメソッド実行前にエラーを表示してる場合 : エラー表示を削除する処理
-      commit('initTargetTodo'); // 登録後 input , textareaを空白にする処理
+      commit('initTargetTodo');
     },
-
-    // 完了、未完了ボタンクリック時
     changeCompleted({ commit }, todo) {
       const targetTodo = Object.assign({}, todo);
       axios.patch(`http://localhost:3000/api/todos/${targetTodo.id}`, {
         completed: !targetTodo.completed,
-      })
-      // axios通信成功時
-      .then(({ data }) => {
+      }).then(({ data }) => {
         commit('editTodo', data);
-      })
-      // エラー発生時
-      .catch((err) => {
+      }).catch((err) => {
         commit('showError', err.response);
       });
-      commit('hideError'); // 追記 changeCompletedTodoメソッド実行前にエラーを表示してる場合 : エラー表示を削除する処理
-      commit('initTargetTodo'); // 完了、未完了ボタンクリック後 input , textareaを空白にする処理
+      commit('hideError');
+      commit('initTargetTodo');
     },
-
-    // 編集ボタンクリック時
     showEditor({ commit }, todo) {
       commit('showEditor', todo);
     },
-
-    // 変更ボタンクリック時
     editTodo({ commit, state }) {
       const targetTodo = state.todos.find(todo => todo.id === state.targetTodo.id);
-      // 入力値を変更しなかった場合の処理
       if (
         targetTodo.title === state.targetTodo.title
         && targetTodo.detail === state.targetTodo.detail
@@ -165,39 +138,25 @@ const store = new Vuex.Store({
         commit('initTargetTodo');
         return;
       }
-      // 入力値を変更した場合の処理
       axios.patch(`http://localhost:3000/api/todos/${state.targetTodo.id}`, {
         title: state.targetTodo.title,
         detail: state.targetTodo.detail,
-      })
-      // axios通信成功時
-      .then(({ data }) => {
+      }).then(({ data }) => {
         commit('editTodo', data);
-      })
-      // エラー発生時
-      .catch((err) => {
+      }).catch((err) => {
         commit('showError', err.response);
       });
-      commit('hideError'); // 追記 editTodoメソッド実行前にエラーを表示してる場合 : エラー表示を削除する処理
+      commit('hideError');
       commit('initTargetTodo');
     },
-
-    // 削除ボタンクリック時
     deleteTodo({ commit }, todoId) {
-      axios.delete(`http://localhost:3000/api/todos/${todoId}`)
-      // axios通信成功時
-      .then(({ data }) => {
-        // 処理
-        commit('deleteTodo', data); // 追記
-      })
-      // エラー発生時
-      .catch((err) => {
-        // 処理
-        commit('showError', err.response); // 追記 エラー表示する処理
+      axios.delete(`http://localhost:3000/api/todos/${todoId}`).then(({ data }) => {
+        commit('deleteTodo', data);
+      }).catch((err) => {
+        commit('showError', err.response);
       });
-      // 必要があれば処理
-      commit('hideError'); // 追記 deleteTodoメソッド実行前にエラーを表示してる場合 : エラー表示を削除する処理
-      commit('initTargetTodo'); // 追記 deleteTodoメソッド実行前にinput textareaにテキストが合った場合 : テキストを削除する処理
+      commit('hideError');
+      commit('initTargetTodo');
     },
   },
 });

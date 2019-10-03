@@ -45,20 +45,20 @@ export default {
   props: {
     todo: { // Listコンポーネントから受け取ったprops
       type: Object,
-      default: function() {
+      default() {
         return {};
       },
     },
   },
   methods: {
-    changeCompleted: function(todo) {
+    changeCompleted(todo) {
       this.$store.dispatch('changeCompleted', todo);
     },
-    showEditor: function(todo) {
+    showEditor(todo) {
       this.$store.dispatch('showEditor', todo);
     },
     // 追記
-    deleteTodo: function(id) {
+    deleteTodo(id) {
       this.$store.dispatch('deleteTodo', id);
     },
   },
